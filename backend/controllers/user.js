@@ -26,6 +26,30 @@ exports.signup =(req, res, next) => {
 };
 
 // export de la fonction "login"
+exports.login = async (req, res, next) => {
+    try {
+      const user = await User.findOne({ email: req.body.email });
+      if (!user) {
+        return res.status(401).json({ message: "Combinaison identifiant/mot de passe incorrecte" });
+      }
+      const valid = await bcrypt.compare(req.body.password, user.password);
+      if (!valid) {
+        return res.status(401).json({ message: "Combinaison identifiant/mot de passe incorrecte" });
+      }
+      res.status(200).json({
+        userId: user._id,
+        token: jwt.sign(
+          { userId: user._id },
+          TOKEN,
+          { expiresIn: '24h' }
+        )
+      });
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  };
+  
+/*
 exports.login = (req, res, next) => {
     User.findOne({email: req.body.email}) // On cherche si le mail renseigné existe dans la base de données "users"
         .then(user => {
@@ -52,3 +76,5 @@ exports.login = (req, res, next) => {
         })
         .catch(error => res.status(500).json({ error }));
 };
+
+*/
