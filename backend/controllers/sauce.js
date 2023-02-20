@@ -58,7 +58,44 @@ exports.deleteOneSauce = (req, res, next) => {
 };
 
 // export du controller qui modifie une sauce
-exports.modifySauce = (req, res, next) => {
+exports.modifySauce = async (req, res, next) => {
+  try {
+    const sauceObject = req.file
+      ? {
+          ...JSON.parse(req.body.sauce),
+          imageUrl: `${req.protocol}://${req.get("host")}/images/${
+            req.file.filename
+          }`,
+        }
+      : { ...req.body };
+
+    delete sauceObject._userId;
+
+    const sauce = await Sauce.findOne({ _id: req.params.id });
+    if (sauce.userId != req.auth.userId) {
+      return res.status(403).json({ message: "Unauthorized request !" });
+    }
+
+    if (req.file) {
+      const filename = sauce.imageUrl.split("/images/")[1];
+      fs.unlink(`images/${filename}`, (error) => {
+        if (error) {
+          console.log(error);
+        }
+      });
+    }
+
+    await Sauce.updateOne(
+      { _id: req.params.id },
+      { ...sauceObject, userId: req.auth.userId, _id: req.params.id }
+    );
+    res.status(200).json({ message: "La sauce a bien été modifiée !" });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+};
+
+/*exports.modifySauce = (req, res, next) => {
   const sauceObject = req.file ? { // est-ce que la requête contient un champs "File" ? si oui
     ...JSON.parse(req.body.sauce), // on récupère l'objet en parsant la chaine de caractères JSON
     imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`// on créer l'URL de l'image : {http}://{localhost:3000}/images/{nom de limage par multer}
@@ -92,6 +129,8 @@ exports.modifySauce = (req, res, next) => {
   })
   .catch((error) => res.status(500).json({ error }));
 };
+*/
+
 
 // like/dislike sauce
 exports.likeOrDislike = (req, res, next) => {
