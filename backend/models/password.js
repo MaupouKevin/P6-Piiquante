@@ -6,7 +6,7 @@ const passwordSchema = new passwordValidator();
 
 // compléxité du mot de passe requise :
 passwordSchema
-    .is().min(6) // minimum de 8 caractères
+    .is().min(6) // minimum de 6 caractères
     .is().max(30) // maximum de 30 caractères
     .has().uppercase() // doit contenir "au moins 1 majuscule"
     .has().lowercase() // doit contenir "au moins 1 minuscule"
