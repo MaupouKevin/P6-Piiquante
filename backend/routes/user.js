@@ -15,6 +15,5 @@ router.post('/signup', passwordValidator.password, userCtrl.signup);
 // connexion d'un utilisateur
 router.post('/login', userCtrl.login);
 
-
 // exportation du module "router"
 module.exports = router;

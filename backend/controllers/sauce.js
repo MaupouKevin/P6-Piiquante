@@ -43,7 +43,7 @@ exports.deleteOneSauce = (req, res, next) => {
     .then((sauce) => {
        // on vérifie que l'userID de la BDD correspond au userID récupéré du TOKEN
       if (sauce.userId != req.auth.userId) { // si ce n'est pas le cas on renvoie une erreur "requête non autorisée"
-        res.status(403).json({message : 'Unauthorized request !'});
+        return res.status(403).json({message : 'Unauthorized request !'});
       } else {
         const filename = sauce.imageUrl.split('/images/')[1]; // on récupère le nom de l'image après le dossier "images" dans l'URL
 
@@ -72,8 +72,8 @@ exports.modifySauce = async (req, res, next) => {
     delete sauceObject._userId;
 
     const sauce = await Sauce.findOne({ _id: req.params.id });
-    if (sauce.userId != req.auth.userId) {
-      return res.status(403).json({ message: "Unauthorized request !" });
+    if (sauce.userId !== req.auth.userId) {
+      return res.status(403).json({ message: "Forbidden request !" });
     }
 
     if (req.file) {
@@ -89,9 +89,9 @@ exports.modifySauce = async (req, res, next) => {
       { _id: req.params.id },
       { ...sauceObject, userId: req.auth.userId, _id: req.params.id }
     );
-    res.status(200).json({ message: "La sauce a bien été modifiée !" });
+    return res.status(200).json({ message: "La sauce a bien été modifiée !" });
   } catch (error) {
-    res.status(500).json({ error });
+    return res.status(500).json({ error });
   }
 };
 

@@ -10,6 +10,8 @@ mongoose.set('strictQuery', false)
 // import du module "dotenv" pour utiliser les variables d'environnement (ici cacher l'ID et le MDP de la base de données)
 const dotenv = require('dotenv');
 dotenv.config();
+
+
 const MONGODB_URI = process.env.MONGODB_URI;
 
 mongoose.connect(MONGODB_URI,
