@@ -7,11 +7,15 @@ const fs  = require ('fs');
 // export du controlleur pour créer une sauce
 exports.createSauce = (req, res, next) => {
 
-    const sauceObject = JSON.parse(req.body.sauce); // on récupère l'objet en parsant la chaine de caractères JSON
-    delete sauceObject._id; // supression de l'id de la requête car il sera créé automatiquement par la BDD
-    delete sauceObject._userId; // supression de l'userId pour éviter les requêtes malveillantes. On va utiliser l'userId du token d'identification à la place
-    
-    const sauce = new Sauce({ // création d'une nouvelle sauce via le schéma "SAUCE" 
+// on récupère l'objet en parsant la chaine de caractères JSON
+    const sauceObject = JSON.parse(req.body.sauce); 
+    // supression de l'id de la requête car il sera créé automatiquement par la BDD
+    delete sauceObject._id; 
+    // supression de l'userId pour éviter les requêtes malveillantes. On va utiliser l'userId du token d'identification à la place
+    delete sauceObject._userId; 
+
+    // création d'une nouvelle sauce via le schéma "SAUCE" 
+    const sauce = new Sauce({ 
       ...sauceObject, // on parcourt l'objet pour récupérer les informations
       userId: req.auth.userId, // on remplace de userId de la requête par l'userID du token
       imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}` // on créer l'URL de l'image : {http}://{localhost:3000}/images/{nom de limage par multer}
