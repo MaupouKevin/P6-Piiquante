@@ -17,6 +17,7 @@ const morgan = require('morgan');
 // import du module "dotenv" pour utiliser les variables d'environnement (ici cacher l'ID et le MDP de la base de données)
 const dotenv = require('dotenv');
 dotenv.config();
+
 const MONGODB_URI = process.env.MONGODB_URI; // //import de la variabe d'environnement pour la connexion à la base da données
 
 /* import du module "helmet" Helmet pour protéger de certaines des vulnérabilités bien connues du Web en configurant de manière appropriée des en-têtes HTTP.
@@ -33,8 +34,8 @@ console.log(html);
 const rateLimiter = require('express-rate-limit');
 
 const limiter = rateLimiter({ // configuration d'express-rate-limit
-  max: 100, // un maximum de 100 requêtes
-  windowMs:60 * 1000 * 10, // toutes les 10 minutes (60 * 1000ms  = 60 * 1s = 1mn * 10 = 10 mn )
+  max: 10, // un maximum de 5 requêtes
+  windowMs:60 * 500 * 10, // toutes les 5 minutes (60 * 500ms  = 60 * 0.5s = 30s * 10 = 5 mn )
   message: "Trop de requêtes effectuées depuis cette adresse IP" // affichera ce message une fois que le nombre de requêtes autorisées sera dépassé
 });
 

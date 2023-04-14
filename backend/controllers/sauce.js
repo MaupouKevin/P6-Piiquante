@@ -29,7 +29,7 @@ exports.createSauce = (req, res, next) => {
 exports.getAllSauce = (req, res, next) => {
   
     Sauce.find() // utilisation de la méthode .find() pour récupérer la liste complète des sauces
-      .then((sauces) => res.status(200).json(sauces)) // récupération du tableau de toutes les sauces dans la base
+      .then((sauces) => res.status(200).json(sauces) , console.log('Récupération Sauces Réussie !')) // récupération du tableau de toutes les sauces dans la base
       .catch((error) => res.status(400).json({ error }));
 };
 
@@ -99,42 +99,6 @@ exports.modifySauce = async (req, res, next) => {
   }
 };
 
-/*exports.modifySauce = (req, res, next) => {
-  const sauceObject = req.file ? { // est-ce que la requête contient un champs "File" ? si oui
-    ...JSON.parse(req.body.sauce), // on récupère l'objet en parsant la chaine de caractères JSON
-    imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`// on créer l'URL de l'image : {http}://{localhost:3000}/images/{nom de limage par multer}
-  } 
-  : {...req.body }; // sinon on récupère l'objet directement
-
-  delete sauceObject._userId; // supression de l'userId pour éviter les requêtes malveillantes
-
-  Sauce.findOne({_id: req.params.id}) // on récupère les informations de la sauce demandée
-  .then((sauce) => {
-    // on vérifie que l'userId de la BDD correspond au userId récupéré du TOKEN
-    if (sauce.userId != req.auth.userId) { // Si ce n'est pas le cas on renvoie une erreur "requête non autorisée"
-      res.status(403).json({message : "Unauthorized request !"});
-    
-    } else {
-
-      if (req.file) { // si la requête contenait une image :
-        const filename = sauce.imageUrl.split('/images/')[1];
-        fs.unlink(`images/${filename}`, (error) => { // alors on supprime l'ancienne image du dossier image ou on affiche une erreur
-          if (error) {
-            console.log(error);
-          }
-        })
-      }
-
-      // Si c'est le bon utilisateur, on met à jour la sauce avec avec l'objet "sauceObject" le userId du token et l'id des paramètres de la requête
-      Sauce.updateOne({ _id: req.params.id}, {...sauceObject, userId: req.auth.userId, _id: req.params.id})
-        .then(() => res.status(200).json({message: "La sauce a bien été modifiée !"}))
-        .catch((error) => res.status(401).json({ error }));
-    }
-  })
-  .catch((error) => res.status(500).json({ error }));
-};
-*/
-
 
 // like/dislike sauce
 exports.likeOrDislike = (req, res, next) => {
@@ -151,7 +115,7 @@ exports.likeOrDislike = (req, res, next) => {
             .then(() => res.status(200).json({ message: "Je n'aime pas !" }))
             .catch((error) => res.status(400).json({ error }));
 
-  } else if (like == 0) { // si la valeur de "like" est égale 0 donc "neutre" (reclic sur le "j'aime" ou "je n'aime pas")
+  } else if (like === 0) { // si la valeur de "like" est égale 0 donc "neutre" (reclic sur le "j'aime" ou "je n'aime pas")
 
           // on cherche la sauce
           Sauce.findOne({ _id: sauceId })
@@ -182,4 +146,6 @@ exports.likeOrDislike = (req, res, next) => {
             .then(() => res.status(200).json({ message: "J'aime !" }))
             .catch((error) => res.status(400).json({ error }));
   }
+
+  
 }

@@ -1,27 +1,16 @@
-# HotTakes
+To initialize the project:
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.2.4.
+Go to the "backend" folder:
 
-## Development server
+Run the command "npm install" in the terminal to install the dependencies
+(If needed, run the command: "npm install express nodemon bcrypt cors dotenv fs jsonwebtoken mongoose mongoose-unique-validator multer morgan path mongoose-error helmet express-rate-limit xss passwordValidator") to install all necessary modules manually.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run the command "nodemon server" to start the server (localhost:3000)
 
-## Code scaffolding
+Then, place yourself in the "frontend" folder:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Run the command "npm start" to launch the frontend page of the project (localhost:4200)
+In order to be able to use all the features, please rename the ".env-template" file to ".env" and fill in your own information
 
-## Build
+In order to create an account a "complex" password is required, here is a working mdp : Mdp123
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
