@@ -1,6 +1,3 @@
 /node_modules
 .env
-/backend/images/*.png
-/backend/images/*.jpg
-/backend/images/*.jpeg
-/backend/images/*.webp
+images/
