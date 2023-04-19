@@ -88,19 +88,28 @@ exports.modifySauce = async (req, res, next) => {
       return res.status(403).json({ message: "Forbidden request !" });
     }
 
+    let filenameToDelete;
     if (req.file) {
-      const filename = sauce.imageUrl.split("/images/")[1];
-      fs.unlink(`images/${filename}`, (error) => {
-        if (error) {
-          console.log(error);
-        }
-      });
+      filenameToDelete = sauce.imageUrl.split("/images/")[1];
     }
 
     await Sauce.updateOne(
       { _id: req.params.id },
       { ...sauceObject, userId: req.auth.userId, _id: req.params.id }
     );
+
+    if (filenameToDelete) {
+      await new Promise((resolve, reject) => {
+        fs.unlink(`images/${filenameToDelete}`, (error) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve();
+          }
+        });
+      });
+    }
+
     return res.status(200).json({ message: "La sauce a bien été modifiée !" });
   } catch (error) {
     // Si une erreur survient, on supprime l'image enregistrée sur le serveur par multer
