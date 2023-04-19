@@ -2,8 +2,8 @@
 const jwt = require('jsonwebtoken');
 
 // import du module "dotenv" pour utiliser les variables d'environnement (ici la variable TOKEN pour la clé d'encodage)
-const dotenv = require('dotenv');
-dotenv.config();
+/*const dotenv = require('dotenv');
+dotenv.config();*/
 const TOKEN = process.env.TOKEN;
 
 // Export d'un middleware qui vérifie l'autorisation / l'authentification de la requête
@@ -17,11 +17,9 @@ module.exports = (req, res, next) => {
          
         // On récupère l'userId du token décodé et on l'ajoute à l'objet "request" qui sera transmis aux routes 
         const userId = decodedToken.userId;
-        req.auth = {
-            userId: userId,
-        };
+        req.auth = {userId};
 
-        next()
+        next();
 
     } catch(error) {
         return res.status(401).json({ error });

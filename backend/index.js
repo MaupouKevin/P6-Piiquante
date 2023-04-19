@@ -1,7 +1,4 @@
-// import du module "http" pour recevoir et répondre à des requêtes http
 const http = require('http');
-
-// import de l'application
 const app = require('./app');
 
 const normalizePort = val => { // permet de renvoyé un port valide sous forme "number" ou "chaîne de caractères"
@@ -20,7 +17,8 @@ const normalizePort = val => { // permet de renvoyé un port valide sous forme "
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port); // On donne le port à utiliser par le serveur (le port 3000 ou la variable d'environnement)
 
-const errorHandler = error => { //  recherche les différentes erreurs et les gère de manière appropriée. Elle est ensuite enregistrée dans le serveur
+// recherche les différentes erreurs et les gère de manière appropriée. Elle est ensuite enregistrée dans le serveur
+const errorHandler = error => { 
   if (error.syscall !== 'listen') {
     throw error;
   }
@@ -40,7 +38,6 @@ const errorHandler = error => { //  recherche les différentes erreurs et les g�
   }
 };
 
-// création du serveur qui recevra notre application app.js
 const server = http.createServer(app);
 
 server.on('error', errorHandler);
@@ -50,5 +47,5 @@ server.on('listening', () => { // un écouteur d'évènements consignant le port
   console.log('Listening on ' + bind);
 });
 
-// méthode "listen" qui permet d'écouter les requêtes envoyées au server sur le port selectionné (ici le port 3000 par défaut ou bien une variable d'environnement)
+// méthode "listen" qui permet d'écouter les requêtes envoyées au server sur le port selectionné
 server.listen(port);
