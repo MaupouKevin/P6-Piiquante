@@ -4,6 +4,13 @@ const fs  = require ('fs');
 const Sauce = require('../models/Sauce');
 
 
+// Fonction pour supprimer une image
+const deleteImage = (filename) => {
+  fs.unlink(`images/${filename}`, (err) => {
+    if (err) console.log(err);
+  });
+};
+
 exports.createSauce = async (req, res, next) => {
   try {
     const sauceObject = JSON.parse(req.body.sauce);
@@ -26,12 +33,11 @@ exports.createSauce = async (req, res, next) => {
   } catch (error) {
     // Si une erreur se produit, supprime l'image enregistrée sur le serveur par multer
     if (req.file) {
-      fs.unlink(`images/${req.file.filename}`, (err) => {
-        if (err) console.log(err);
-      });
+      deleteImage(req.file.filename);
     }
     res.status(400).json({ error });
   }
+
 };
 
 
@@ -124,12 +130,10 @@ exports.modifySauce = async (req, res, next) => {
   }
 };
 
-
-// like/dislike sauce
 exports.likeOrDislike = (req, res, next) => {
-  like = req.body.like;
-  sauceId = req.params.id;
-  userId = req.auth.userId;
+  const like = Number(req.body.like); // utilisation de Number() pour s'assurer que like est un nombre
+  const sauceId = req.params.id;
+  const userId = req.auth.userId;
 
   // Fonction pour gérer la réussite
   const handleSuccess = (res, message) => {
@@ -141,14 +145,20 @@ exports.likeOrDislike = (req, res, next) => {
     res.status(400).json({ error });
   };
 
+  // Vérifier que like est une valeur valide (0, 1 ou -1)
+  if (![0, 1, -1].includes(like)) {
+    handleError(res, "Valeur 'like' invalide");
+    return;
+  }
+
+  // Déterminer l'action à effectuer en fonction de la valeur de like
   if (like === -1) {
     Sauce.updateOne(
       { _id: sauceId },
-      { $push: { usersDisliked: userId }, $inc: { dislikes: +1 } }
+      { $push: { usersDisliked: userId }, $inc: { dislikes: 1 } }
     )
       .then(() => handleSuccess(res, "Je n'aime pas !"))
       .catch((error) => handleError(res, error));
-
   } else if (like === 0) {
     Sauce.findOne({ _id: sauceId })
       .then((sauce) => {
@@ -170,11 +180,10 @@ exports.likeOrDislike = (req, res, next) => {
         }
       })
       .catch((error) => handleError(res, error));
-
-  } else if (like == 1) {
+  } else if (like === 1) {
     Sauce.updateOne(
       { _id: sauceId },
-      { $push: { usersLiked: userId }, $inc: { likes: +1 } }
+      { $push: { usersLiked: userId }, $inc: { likes: 1 } }
     )
       .then(() => handleSuccess(res, "J'aime !"))
       .catch((error) => handleError(res, error));
