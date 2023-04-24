@@ -1,7 +1,4 @@
-// import du module "http" pour recevoir et répondre à des requêtes http
 const http = require('http');
-
-// import de l'application
 const app = require('./app');
 
 const normalizePort = val => { // permet de renvoyé un port valide sous forme "number" ou "chaîne de caractères"
@@ -15,7 +12,6 @@ const normalizePort = val => { // permet de renvoyé un port valide sous forme "
   }
   return false;
 };
-
 
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port); // On donne le port à utiliser par le serveur (le port 3000 ou la variable d'environnement)
@@ -40,7 +36,6 @@ const errorHandler = error => { //  recherche les différentes erreurs et les g�
   }
 };
 
-// création du serveur qui recevra notre application app.js
 const server = http.createServer(app);
 
 server.on('error', errorHandler);
