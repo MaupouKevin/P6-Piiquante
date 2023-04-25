@@ -19,9 +19,7 @@ module.exports = (req, res, next) => {
             // si userId n'est pas défini, on renvoie une erreur 401 Unauthorized
             return res.status(httpStatus.UNAUTHORIZED).json({ error: 'Autorisation Refusée  ! Veuillez vous reconnecter !' });
           }
-        req.auth = {
-            userId: userId,
-        };
+        req.auth = {userId};
 
         next()
 

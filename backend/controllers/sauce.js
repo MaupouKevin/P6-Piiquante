@@ -3,23 +3,6 @@ const fs  = require ('fs');
 
 const Sauce = require('../models/Sauce');
 
-
-const likeMessage = "J'aime !";
-const dislikeMessage = "Je n'aime pas !";
-const anythingsMessage = "Sans avis !";
-const alreadyLikeMessage = "Merci de votre retour ! Nous savons déjà que vous aimez.";
-const alreadyDislikeMessage = "Merci de votre retour ! Nous savons déjà que vous n'aimez pas.";
-const alreadyAnythingsMessage = "Merci de votre retour !";
-const invalidParamsMessage = "Valeur 'like' invalide"
-const allowableValues =  [0, 1, -1];
-
-// Objets contenant les messages correspondants à chaque règle 
-const messagesByRule = {
-  '1': { message: likeMessage, alreadyMessage: alreadyLikeMessage },
-  '-1': { message: dislikeMessage, alreadyMessage: alreadyDislikeMessage },
-  '0': { message: anythingsMessage, alreadyMessage: alreadyAnythingsMessage },
-}
-
 // Fonction pour supprimer une image
 const deleteImage = (filename) => {
   fs.unlink(`images/${filename}`, (err) => {
@@ -146,6 +129,22 @@ exports.modifySauce = async (req, res, next) => {
   }
 };
 
+const likeMessage = "J'aime !";
+const dislikeMessage = "Je n'aime pas !";
+const anythingsMessage = "Sans avis !";
+const alreadyLikeMessage = "Merci de votre retour ! Nous savons déjà que vous aimez.";
+const alreadyDislikeMessage = "Merci de votre retour ! Nous savons déjà que vous n'aimez pas.";
+const alreadyAnythingsMessage = "Merci de votre retour !";
+const invalidParamsMessage = "Valeur 'like' invalide"
+const allowableValues =  [0, 1, -1];
+
+// Objets contenant les messages correspondants à chaque règle 
+const messagesByRule = {
+  '1': { message: likeMessage, alreadyMessage: alreadyLikeMessage },
+  '-1': { message: dislikeMessage, alreadyMessage: alreadyDislikeMessage },
+  '0': { message: anythingsMessage, alreadyMessage: alreadyAnythingsMessage },
+}
+
 
   // Fonction pour gérer la réussite
   const handleSuccess = (res, message) => {
@@ -159,7 +158,7 @@ exports.modifySauce = async (req, res, next) => {
     res.status(httpStatus.BADREQUEST).json({ error });
   };
 
-// Fonction pour préparer les paramètres à passer à la fonction updateOne de MongoDB
+// Fonction pour préparer les paramètres à passer à la fonction updateOne
 async function getPreparedFunction(chosenRuleString, message, userInfos) {
   const { userId, isLiked, isDisliked } = userInfos;
 
@@ -214,7 +213,8 @@ const applyRuleByRessourceId = async (res, userInfos) => {
     ressourceId,
   } = userInfos
 
-  const likeParamString = `${likeParamStatus}`
+  //const likeParamString = `${likeParamStatus}`
+  const likeParamString = likeParamStatus.toString();
 
   // On récupère les messages à afficher en fonction de la règle appliquée
   const {message, alreadyMessage} =  messagesByRule[likeParamString]
