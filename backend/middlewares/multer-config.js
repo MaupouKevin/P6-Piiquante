@@ -1,14 +1,13 @@
-// import du module "multer" pour gérer les fichiers entrants dans les requêtes
 const multer = require('multer');
 
 // objet dictionnaire pour traiter les extensions | c'est un standard permettant d'indiquer la nature et le format d'un document (cf mozilla)
 const MIME_TYPES = {
-  'image/jpg': 'jpg',
-  'image/jpeg': 'jpg',
-  'image/png': 'png',
-  'image/webp': 'webp',
-  'image/bmp': 'bmp',
-  'image/gif': 'gif',
+  'images/jpg': 'jpg',
+  'images/jpeg': 'jpg',
+  'images/png': 'png',
+  'images/webp': 'webp',
+  'images/bmp': 'bmp',
+  'images/gif': 'gif',
 };
 
 // création de la logique d'enregistrement des fichiers entrants sur le disque (.diskStorage)
