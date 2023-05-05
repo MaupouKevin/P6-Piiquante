@@ -19,9 +19,9 @@ to start the server (localhost:3000)
 cd frontend && npm start 
 ```
 Project car be access to [localhost:4200](localhost:4200)
-In order to be able to use all the features, please rename the ".env-template" file to ".env" and fill in your own information
+In order to be able to use all the features, please rename the ".env.dist" file to ".env" and fill in your own information
 ```bash
-cp .env-template .env
+cp .env.dist .env
 ```
 
 In order to create an account a "complex" password is required, here is a working mdp : Mdp123

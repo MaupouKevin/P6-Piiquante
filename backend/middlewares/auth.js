@@ -1,6 +1,5 @@
-// import du module "jsonwebtoken" vérifier le token d'authentification
 const jwt = require('jsonwebtoken');
-
+const status = require('http-status');
 const processToken = process.env.TOKEN;
 
 // Export d'un middleware qui vérifie l'autorisation / l'authentification de la requête
@@ -16,14 +15,15 @@ module.exports = (req, res, next) => {
         const userId = decodedToken.userId;
 
         if (userId === undefined) {
-            // si userId n'est pas défini, on renvoie une erreur 401 Unauthorized
-            return res.status(httpStatus.UNAUTHORIZED).json({ error: 'Autorisation Refusée  ! Veuillez vous reconnecter !' });
+            console.log('Autorisation Refusée !');
+            return res.status(status.UNAUTHORIZED).json({ error });
           }
         req.auth = {userId};
 
         next()
 
     } catch(error) {
-        return res.status(httpStatus.UNAUTHORIZED).json({ error });
+        console.log('Autorisation Refusée !');
+        return res.status(status.UNAUTHORIZED).json({ error });
     }
-}
+};

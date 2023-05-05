@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 
 //import du plugin "mongoose error" pour la gestion des erreurs 
-const MongooseErrors = require('mongoose-errors');
+const mongooseErrors = require('mongoose-errors');
 
 // import du plugin "mongoose-unique-validator" qui s'assure, en plus de (unique : true), qu'une adresse e-mail ne peut être utilisée que pour un seul compte utilisateur
 const uniqueValidator = require('mongoose-unique-validator');
@@ -15,7 +15,7 @@ const userSchema = mongoose.Schema({
   
 });
 
-userSchema.plugin(MongooseErrors);
+userSchema.plugin(mongooseErrors);
 userSchema.plugin(uniqueValidator);
 
 

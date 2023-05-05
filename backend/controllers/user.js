@@ -8,33 +8,40 @@ const processToken = process.env.TOKEN;
 
 const User = require('../models/User');
 
-exports.signup =(req, res, next) => {
-    bcrypt.hash(req.body.password, 10) // Une fois le formulaire d'inscription rempli on crypte le mot de passe avec la méthode ".hash" de "bcrypt"
-    .then(hash => {
-        const user = new User({ // on utilise notre schéma "User" pour créer un nouvel utilisateur avec le mot de passe crypté
-            email: req.body.email,
-            password: hash,
-        });
-        user.save()
-        .then(() => res.status(httpStatus.CREATED).json({ message : 'utilisateur créé !' }))
-        .catch (error => res.status(httpStatus.BADREQUEST).json({ error }));
-    })
-    .catch(error => res.status(httpStatus.SERVERERROR).json({ error }));
+const status = require('http-status');
+
+exports.signup = async (req, res, next) => {
+  try {
+    const hash = await bcrypt.hash(req.body.password, 10);
+    const user = new User({
+      email: req.body.email,
+      password: hash
+    });
+    await user.save();
+    res.status(status.CREATED).json;
+    console.log('Utilisateur créé !')
+  } catch (error) {
+    res.status(status.INTERNAL_SERVER_ERROR).json;
+    console.log('Erreur serveur ! Veuillez ré-essayer !')
+  }
 };
 
 exports.login = async (req, res, next) => {
     try {
       const user = await User.findOne({ email: req.body.email });
       if (!user) {
-        return res.status(httpStatus.UNAUTHORIZED).json({ message: "Combinaison identifiant/mot de passe incorrecte" });
+        console.log('Combinaison identifiant/mot de passe incorrecte');
+        return res.status(status.UNAUTHORIZED).json({ message: "Combinaison identifiant/mot de passe incorrecte" });
       }
 
       const valid = await bcrypt.compare(req.body.password, user.password);
       if (!valid) {
-        return res.status(httpStatus.UNAUTHORIZED).json({ message: "Combinaison identifiant/mot de passe incorrecte" });
+        console.log('Combinaison identifiant/mot de passe incorrecte');
+        return res.status(status.UNAUTHORIZED).json({ message: "Combinaison identifiant/mot de passe incorrecte" });
+        
       }
 
-      return res.status(httpStatus.OK).json({
+      return res.status(status.OK).json({
         userId: user._id,
         token: jwt.sign(
           { userId: user._id },
@@ -42,8 +49,10 @@ exports.login = async (req, res, next) => {
           { expiresIn: '24h' }
         )
       });
+      
     } catch (error) {
-      return res.status(httpStatus.SERVERERROR).json({ error });
+      console.log('Erreur serveur ! Veuillez ré-essayer !');
+      return res.status(status.INTERNAL_SERVER_ERROR).json({ error });
     }
   };
 

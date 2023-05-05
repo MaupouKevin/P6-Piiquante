@@ -1,12 +1,9 @@
 const express = require ('express');
-const httpStatus = require('http-status');
+const status = require('http-status');
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', false)
-// import module "path" pour la gestion de chemins de stockage
 const path = require('path');
-// import du module "cors" afin d'accepter les requêtes provenant de sources différentes 
 const cors = require('cors');
-// import du module "morgan" pour que les informations sur les requêtes soient envoyées dans le terminal
 const morgan = require('morgan');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -32,23 +29,21 @@ mongoose.connect(MONGODB_URI,
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
-
   const app = express();
 
-  app.use(cors());
-  
-  app.use(express.json());
-  
   app.use(helmet());
- app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
-  
+  app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
   app.use(morgan('combined'));
-  
   app.use(limiter);
-  
+  app.use(cors());
+  app.use(express.json());
+
+  app.use("/images", express.static(path.join(__dirname, "images"))); // on récupère le répertoire où s'execute le server + le dossier (image)
   app.use('/api/sauces', sauceRoutes);
   app.use('/api/auth', userRoutes);
   
-  app.use("/images", express.static(path.join(__dirname, "images"))); // on récupère le répertoire où s'execute le server + le dossier (image)
+  app.use("/", (req, res, next) => {
+    return res.status(status.OK).json({message: "OK"})
+  });
   
   module.exports = app;
